@@ -61,6 +61,13 @@ function love.keypressed(key)
 
 end
 
+-- полноэкранный режим
+function love.keypressed(key, scancode, isrepeat)
+  if key == "f11" then
+		fullscreen = not fullscreen
+		love.window.setFullscreen(fullscreen, "desktop")
+	end
+end
 
 function love.update(dt)
   
@@ -125,7 +132,8 @@ function drawFiveToFiveMap()
   local xMargin = VIRTUAL_WIDTH - (MAP_TALE_SIZE * 3) -- 240 - 120 = 120
   local yMargin = VIRTUAL_HEIGHT - (MAP_TALE_SIZE * 3) -- 320 - 120 = 200
   
-  end
+end
+
 
 
 function love.draw()
