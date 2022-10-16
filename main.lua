@@ -22,6 +22,7 @@ WINDOW_HEIGHT = 720
 MAP_HEIGHT, MAP_WIDTH = 3, 3
 MAP_TALE_SIZE = 40
 
+SPRITE_PADDING = 6
 
 -- подгружаем изображения
 
@@ -37,7 +38,7 @@ local map = {
   }
   
 local currentPlayer = 1
-local currentPlayer = 2
+local SelectedX, SelectedY = 1, 1
 
 function love.load()
   -- добавил немного размытия для более красивого отображения пикселей
@@ -109,16 +110,21 @@ function drawMap()
   -- рисует спрайты
   for  y = 1, MAP_HEIGHT do
     for x = 1, MAP_WIDTH do
-      local xOffset = xMargin / 2 + MAP_TALE_SIZE * (x + 1)
+      local xOffset = xMargin / 2 + MAP_TALE_SIZE * (x - 1)
       local yOffset = yMargin / 2 + MAP_TALE_SIZE * (y - 1)
       if map[y][x] == "" then
         -- ничего не делаем
       elseif map[y][x] == "X" then
         -- тогда рисуем Х - спрайт
-        love.graphics.draw(xSprite, xOffset, yOffset)
+        love.graphics.draw(xSprite, xOffset + SPRITE_PADDING, yOffset)
       else
-        love.graphics.draw(oSprite, xOffset, yOffset)
-        end
+        love.graphics.draw(oSprite, xOffset + SPRITE_PADDING, yOffset)
+      end
+      if x == selectedX and y == selectedY then
+      love.graphics.setColor(1, 1, 1, 0.25)
+      love.graphics.rectangle('fill', xOffset, yOffset, MAP_TALE_SIZE, MAP_TALE_SIZE)
+      love.graphics.setColor(1, 1, 1, 1)
+      end
     end
   end
 end
