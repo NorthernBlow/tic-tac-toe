@@ -53,21 +53,31 @@ function love.load()
 end
 
 
-
-function love.keypressed(key)
-  -- если нажатая клавиша esc, то выключает игру
-  if key == 'escape' then
+function love.keypressed(key, scancode, isrepeat)
+   if key == 'escape' then
     love.event.quit()
     end
-
-end
-
--- полноэкранный режим
-function love.keypressed(key, scancode, isrepeat)
   if key == "f11" then
 		fullscreen = not fullscreen
 		love.window.setFullscreen(fullscreen, "desktop")
 	end
+  if key == 'left' then
+    if SelectedX > 1 then
+      SelectedX = SelectedX - 1
+  end
+elseif key == 'right' then
+  if SelectedX < 3 then
+    SelectedX = SelectedX + 1
+  end
+elseif key == 'up' then
+  if SelectedY > 1 then
+    SelectedY = SelectedY - 1
+  end
+elseif  key == 'down' then
+  if SelectedY < 3 then
+    SelectedY = SelectedY + 1
+    end
+  end
 end
 
 function love.update(dt)
@@ -120,9 +130,9 @@ function drawMap()
       else
         love.graphics.draw(oSprite, xOffset + SPRITE_PADDING, yOffset)
       end
-      if x == selectedX and y == selectedY then
-      love.graphics.setColor(1, 1, 1, 0.25)
-      love.graphics.rectangle('fill', xOffset, yOffset, MAP_TALE_SIZE, MAP_TALE_SIZE)
+      if x == SelectedX and y == SelectedY then
+      love.graphics.setColor(0, 1, 1, 0.5)
+      love.graphics.rectangle('fill', xOffset, yOffset, MAP_TALE_SIZE, MAP_HEIGHT)
       love.graphics.setColor(1, 1, 1, 1)
       end
     end
