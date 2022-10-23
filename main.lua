@@ -40,7 +40,8 @@ local map = {
   {"","",""},
   {"","",""}
   }
-  
+
+local gameOver = false
 local currentPlayer = 1
 local SelectedX, SelectedY = 1, 1
 
@@ -93,6 +94,7 @@ elseif key == 'space' then
       end
   end
 end
+
 
 function love.update(dt)
   
@@ -180,19 +182,39 @@ for x = 1, mAP_WIDTH do
   
   for y = 2, mAP_HEIGHT do
     if map[y][x] ~= firstCharacter then
-      return
+      goto continue
     end
   end
   win = true
-  winningCharacter = firstCharacter
+  winningPlayer = firstCharacter == "X" and 1 or 2
   ::continue::
 end
-  ---чекаем диагонали
+  ---чекаем X линии
 if victory then
   gameOver = true
-  winningplayer = ''
+  winningPlayer = ''
   end
+  --- проверяем О линии
+  for y = 1, mAP_HEIGHT do
+    local win = true
+    local firstCharacter = map[y][1]
+    
+    if firstCharacter == "" then
+      goto continue
+    
+  end
+  for x = 2, mAP_WIDTH do
+    if map[y][x] ~= firstCharacter then
+      return
+      end
+  end
+end  
+
+  gameOver = true
+  winningPlayer = firstCharacter ~= "O" and 1 or 2
+  ::continue::
 end
+
 
 function love.draw()
   push:start()
