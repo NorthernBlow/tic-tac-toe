@@ -31,12 +31,14 @@ SPRITE_PADDING = 6
 local xSprite = love.graphics.newImage('graphics/crest.png')
 local oSprite = love.graphics.newImage('graphics/zero.png')
 
+local retroFont = love.graphics.newFont('fonts/04B_30__.TTF', 10)
+
 -- структуры данных
 
 local map = {
-  {"y","X",""},
-  {"","","Y"},
-  {"","x",""}
+  {"","",""},
+  {"","",""},
+  {"","",""}
   }
   
 local currentPlayer = 1
@@ -45,7 +47,7 @@ local SelectedX, SelectedY = 1, 1
 function love.load()
   -- добавил немного размытия для более красивого отображения пикселей
   love.graphics.setDefaultFilter('nearest', 'nearest')
-  
+  love.graphics.setFont(retroFont)
   love.window.setTitle('Крестики-Нолики')
   push:setupScreen(VIRTUAL_HEIGHT, VIRTUAL_WIDTH, WINDOW_WIDTH, WINDOW_HEIGHT, {
       fullscreen = false,
@@ -78,7 +80,17 @@ elseif key == 'up' then
 elseif  key == 'down' then
   if SelectedY < 3 then
     SelectedY = SelectedY + 1
-    end
+  end
+elseif key == 'space' then
+  if map[SelectedY][SelectedX] == "" then
+    if currentPlayer == 1 then
+      map[SelectedY][SelectedX] = 'X'
+      currentPlayer = 2
+    else
+      map[SelectedY][SelectedX] = 'O'
+      currentPlayer = 1
+      end
+      end
   end
 end
 
@@ -152,11 +164,39 @@ function drawFiveToFiveMap()
   
 end
 
-
+function isVictory()
+  
+ --допустим это поражение 
+  local win = false
+  local winningCharacter = ''
+  
+for x = 1, mAP_WIDTH do
+  local win = true
+  local firstCharacter = map[1][x]
+  
+  if firstCharacter == "" then
+    goto continue
+  end
+  
+  for y = 2, mAP_HEIGHT do
+    if map[y][x] ~= firstCharacter then
+      return
+    end
+  end
+  win = true
+  winningCharacter = firstCharacter
+  ::continue::
+end
+  ---чекаем диагонали
+if victory then
+  gameOver = true
+  winningplayer = ''
+  end
+end
 
 function love.draw()
   push:start()
-  love.graphics.print(tostring(love.graphics.getRendererInfo('name', 'device')), 100, 1)
+  love.graphics.print(tostring(love.graphics.getRendererInfo('name', 'device')), 200, 20)
   love.graphics.print(tostring(1.0 / love.timer.getDelta()), 200, 1)
   drawMap()
   love.graphics.setColor(0, 1, 2);
