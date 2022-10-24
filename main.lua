@@ -1,9 +1,10 @@
 --[[
-Крестики-нолики
+Крестики - нолики // tic tac toe
 
-Автор: Святослав Рэинхарт
-evolution.is.not.theory@gmail.com
+Autor: name_holder
+name_holder@mailbox.yours
 
+it's a open source project. all rights belong to all
 ]]
 
 
