@@ -13,10 +13,10 @@ local push = require "push"
 
 
 -- JUST BECAUSE I LUVE AETHETIC
-VIRTUAL_WIDTH = 240
+VIRTUAL_WIDTH = 320
 VIRTUAL_HEIGHT = 320
 
-WINDOW_WIDTH = 1280
+WINDOW_WIDTH = 900
 WINDOW_HEIGHT = 720
 
 --маленькие квадраты
@@ -34,16 +34,16 @@ local oSprite = love.graphics.newImage('graphics/zero.png')
 local retroFont = love.graphics.newFont('fonts/04B_30__.TTF', 10)
 
 -- структуры данных
-
 local map = {
   {"","",""},
   {"","",""},
   {"","",""}
   }
 
-local gameOver = false
+local win = false
 local currentPlayer = 1
 local SelectedX, SelectedY = 1, 1
+local gameOver = false
 
 function love.load()
   -- добавил немного размытия для более красивого отображения пикселей
@@ -61,7 +61,10 @@ end
 function love.keypressed(key, scancode, isrepeat)
    if key == 'escape' then
     love.event.quit()
-    end
+  end
+  
+  if not gameOver then
+    
   if key == "f11" then
 		fullscreen = not fullscreen
 		love.window.setFullscreen(fullscreen, "desktop")
@@ -93,6 +96,7 @@ elseif key == 'space' then
       end
       end
   end
+end
 end
 
 
@@ -130,7 +134,7 @@ function drawMap()
     VIRTUAL_WIDTH - xMargin / 2, yMargin / 2 + mAP_TALE_SIZE) -- х1=60,у1=140,х2=180,у2=140
   
   -- вторая горизонтальная линия
-  local secondHorizontalLine = {60, 180, 180, 180} -- хватит пересчитывать переменные.
+  local secondHorizontalLine = {100, 180, 220, 180} -- хватит пересчитывать переменные.
   love.graphics.line(secondHorizontalLine)
   
   -- рисует спрайты
@@ -166,13 +170,26 @@ function drawFiveToFiveMap()
   
 end
 
-function isVictory()
+function isVictories()
   
- --допустим это поражение 
+  -- допустим это поражение 
   local win = false
   local winningCharacter = ''
+  -- проверяем первую горизонтальную линию
+CheckHorizontals()
+ChechVerticals()
+  -- проверяем две диагональные линии на победу
+  local firstCharacter = map[1][1]
+  local match = true
+CheckDiagonals()
+  -- из нижнего левого до верхнего правого угла на победу
   
-for x = 1, mAP_WIDTH do
+end
+
+
+-- диагонали, см выше, там вызвано в isVictory
+function CheckVerticals()
+  for x = 1, mAP_WIDTH do
   local win = true
   local firstCharacter = map[1][x]
   
@@ -185,27 +202,27 @@ for x = 1, mAP_WIDTH do
       goto continue
     end
   end
-  win = true
+  gameOver = true
   winningPlayer = firstCharacter == "X" and 1 or 2
   ::continue::
 end
-  ---чекаем X линии
+
 if victory then
   gameOver = true
   winningPlayer = ''
-  end
-  --- проверяем О линии
-  for y = 1, mAP_HEIGHT do
+end
+
+  --- проверяем вторую горизонталь
+  for x = 1, mAP_HEIGHT do
     local win = true
-    local firstCharacter = map[y][1]
+    local firstCharacter = map[1][x]
     
     if firstCharacter == "" then
       goto continue
-    
   end
-  for x = 2, mAP_WIDTH do
+  for y = 2, mAP_WIDTH do
     if map[y][x] ~= firstCharacter then
-      return
+      goto continue
       end
   end
 end  
@@ -213,6 +230,53 @@ end
   gameOver = true
   winningPlayer = firstCharacter ~= "O" and 1 or 2
   ::continue::
+  end
+
+
+function CheckDiagonals()
+  firstCharacter = map[mAP_HEIGHT][1]
+    if firstCharacter == "" then
+    -- ничего не делаем
+  else
+    local x, y = 2, 2
+  for n = 1, mAP_HEIGHT - 1 do
+    if map[y][x] ~= firstCharacter then
+      match = false
+      break
+    end
+    
+    y = y - 1
+    x = x + 1
+    
+  if match then
+    gameOver = true
+    winningPlayer = firstCharacter == 'X' and 1 or 2
+     end
+  end
+ end
+end
+
+
+function CheckHorizontals()
+    -- проверяем Y горизонтальные линиии
+  for y = 1, mAP_HEIGHT do
+    local win = true
+    local firstCharacter = map[y][1]
+
+      if firstCharacter == "" then
+          goto continue
+      end
+
+      for x = 2, mAP_WIDTH do
+          if map[y][x] ~= firstCharacter then
+              goto continue
+          end
+      end
+
+        gameOver = true
+        winningPlayer = firstCharacter == "X" and 1 or 2
+        ::continue::
+    end
 end
 
 
@@ -221,7 +285,12 @@ function love.draw()
   love.graphics.print(tostring(love.graphics.getRendererInfo('name', 'device')), 200, 20)
   love.graphics.print(tostring(1.0 / love.timer.getDelta()), 200, 1)
   drawMap()
+  if gameOver then
+    love.graphics.print('Player ' .. winningPlayer .. ' wins!')
+  else
+    love.graphics.print("Player " .. currentPlayer .. "'s turn")
+    end
   love.graphics.setColor(0, 1, 2);
-  love.graphics.print("Player " .. currentPlayer .. "'s turn")
+  
   push:finish()
 end
