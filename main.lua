@@ -178,7 +178,7 @@ function isVictories()
   local winningCharacter = ''
   -- проверяем первую горизонтальную линию
 CheckHorizontals()
-ChechVerticals()
+CheckVerticals()
   -- проверяем две диагональные линии на победу
   local firstCharacter = map[1][1]
   local match = true
@@ -286,6 +286,7 @@ function love.draw()
   love.graphics.print(tostring(love.graphics.getRendererInfo('name', 'device')), 200, 20)
   love.graphics.print(tostring(1.0 / love.timer.getDelta()), 200, 1)
   drawMap()
+  isVictories()
   if gameOver then
     love.graphics.print('Player ' .. winningPlayer .. ' wins!')
   else
