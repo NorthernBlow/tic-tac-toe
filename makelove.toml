@@ -1,0 +1,10 @@
+name = "tic_tac_toe"
+default_targets = ["appimage"]
+build_directory = "/home/northerblow/prog/"
+
+love_files = [
+    "::git-ls-tree::",
+    "-*/.*",
+]
+icon_file = "graphics/zero.png"
+keep_game_directory = true
