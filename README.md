@@ -2,6 +2,8 @@
 
 Игра создана на движке  LÖVE2D и Lua
 
+<img src="https://github.com/NorthernBlow/tic-tac-toe/blob/main/screenshots/Screenshot.png" />
+
 
 
 #### Геймплей:
